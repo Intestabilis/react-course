@@ -1,0 +1,242 @@
+CODING CHALLENGE #1
+
+index.js
+
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles.css";
+
+function App() {
+  return (
+    <div className="card">
+      <Avatar />
+      <div className="data">
+        <Intro />
+        <SkillList />
+      </div>
+    </div>
+  );
+}
+
+function Avatar() {
+  return (
+    <img
+      className="avatar"
+      src="https://wallpapers.com/images/featured/pirate-pictures-l6m4gqrni9sduwn2.jpg"
+      alt="Cool skeleton pirate. Hell yeah"
+    />
+  );
+}
+
+function Intro() {
+  return (
+    <div>
+      <h1>Skelly the Pirate</h1>
+      <p>
+        Passionate and cool dude like he is really into pirating skeleting and
+        other cool stuff. Genuinely idk what to write here and don't want to do
+        this challenge text about myself. ALSO look that skeleton is a part-time
+        programmer and he has following hard-skills:
+      </p>
+    </div>
+  );
+}
+
+function SkillList(props) {
+  return (
+    <div className="skill-list">
+      <Skill color="orangered" text="HTML" emoji="🌹" />
+      <Skill color="yellow" text="CSS" emoji="🎉" />
+      <Skill color="teal" text="JS" emoji="💋" />
+      <Skill color="grey" text="Cartography" emoji="🗺" />
+    </div>
+  );
+}
+
+function Skill(props) {
+  return (
+    <p className="skill" style={{ backgroundColor: props.color }}>
+      <span>{props.text}</span>
+      {props.emoji}
+    </p>
+  );
+}
+
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+
+styles.css
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "IBM Plex Mono", sans-serif;
+  background-color: #f7f7f7;
+}
+
+h1 {
+  margin-bottom: 12px;
+}
+
+.card {
+  width: 450px;
+  margin: 40px;
+  border: 4px solid #222;
+}
+
+.card::after {
+  content: "";
+  display: block;
+}
+
+.avatar {
+  width: 100%;
+  display: block;
+}
+
+.data {
+  padding: 32px;
+  padding-top: 24px;
+}
+
+.skill-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.skill {
+  padding: 2px 12px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+CODING CHALLENGE #2
+
+index.js
+
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles.css";
+
+const skills = [
+  {
+    skill: "HTML",
+    level: "advanced",
+    color: "orangered",
+  },
+  {
+    skill: "CSS",
+    level: "intermediate",
+    color: "teal",
+  },
+  {
+    skill: "Javascript",
+    level: "advanced",
+    color: "yellow",
+  },
+  {
+    skill: "React",
+    level: "beginner",
+    color: "blue",
+  },
+  {
+    skill: "Cartography",
+    level: "advanced",
+    color: "grey",
+  },
+];
+
+function App() {
+  return (
+    <div className="card">
+      <Avatar />
+      <div className="data">
+        <Intro />
+        <SkillList />
+      </div>
+    </div>
+  );
+}
+
+function Avatar() {
+  return (
+    <img
+      className="avatar"
+      src="https://wallpapers.com/images/featured/pirate-pictures-l6m4gqrni9sduwn2.jpg"
+      alt="Cool skeleton pirate. Hell yeah"
+    />
+  );
+}
+
+function Intro() {
+  return (
+    <div>
+      <h1>Skelly the Pirate</h1>
+      <p>
+        Passionate and cool dude like he is really into pirating skeleting and
+        other cool stuff. Genuinely idk what to write here and don't want to do
+        this challenge text about myself. ALSO look that skeleton is a part-time
+        programmer and he has following hard-skills:
+      </p>
+    </div>
+  );
+}
+
+function SkillList({}) {
+  return (
+    <div className="skill-list">
+      {skills.map((skill) => (
+        <Skill skillObj={skill} key={skill.skill} />
+      ))}
+      {/* <Skill color="orangered" skill="HTML" level="🌹" />
+      <Skill color="yellow" skill="CSS" level="🎉" />
+      <Skill color="teal" skill="JS" level="💋" />
+      <Skill color="grey" skill="Cartography" level="🗺" /> */}
+    </div>
+  );
+}
+
+function Skill({ skillObj }) {
+  return (
+    <p className="skill" style={{ backgroundColor: skillObj.color }}>
+      <span>{skillObj.skill}</span>
+      {skillObj.level === "advanced" && "🙌"}
+      {skillObj.level === "intermediate" && "👏"}
+      {skillObj.level === "beginner" && "🙏"}
+      {/* {skillObj.level === "advanced"
+        ? "🙌"
+        : skillObj.level === "intermediate"
+        ? "👏"
+        : skillObj.level === "beginner"
+        ? "🙏"
+        : ""} */}
+    </p>
+  );
+}
+
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
