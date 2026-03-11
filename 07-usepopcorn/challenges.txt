@@ -1,0 +1,232 @@
+CODING CHALLENGE #1
+
+App.js
+
+import { useState } from "react";
+import "./styles.css";
+
+export default function App() {
+  return (
+    <div>
+      <TextExpander>
+        Space travel is the ultimate adventure! Imagine soaring past the stars
+        and exploring new worlds. It's the stuff of dreams and science fiction,
+        but believe it or not, space travel is a real thing. Humans and robots
+        are constantly venturing out into the cosmos to uncover its secrets and
+        push the boundaries of what's possible.
+      </TextExpander>
+
+      <TextExpander
+        collapsedNumWords={20}
+        expandButtonText="Show text"
+        collapseButtonText="Collapse text"
+        buttonColor="#ff6622"
+      >
+        Space travel requires some seriously amazing technology and
+        collaboration between countries, private companies, and international
+        space organizations. And while it's not always easy (or cheap), the
+        results are out of this world. Think about the first time humans stepped
+        foot on the moon or when rovers were sent to roam around on Mars.
+      </TextExpander>
+
+      <TextExpander expanded={true} className="box">
+        Space missions have given us incredible insights into our universe and
+        have inspired future generations to keep reaching for the stars. Space
+        travel is a pretty cool thing to think about. Who knows what we'll
+        discover next!
+      </TextExpander>
+    </div>
+  );
+}
+
+function TextExpander({
+  collapsedNumWords = 10,
+  expandButtonText = "Show more",
+  collapseButtonText = "Show less",
+  buttonColor = "#0000FF",
+  expanded = false,
+  className = "",
+  children,
+}) {
+  const [isExpanded, setIsExpanded] = useState(expanded);
+  const words = children.split(" ");
+  const preview = words.slice(0, collapsedNumWords);
+
+  const buttonStyle = {
+    backgroundColor: "none",
+    border: "none",
+    fontSize: "1rem",
+    marginLeft: "1ch",
+    color: buttonColor,
+    cursor: "pointer",
+  };
+
+  function handleIsExpanded() {
+    setIsExpanded((exp) => (exp = !exp));
+  }
+
+  return (
+    <div className={className}>
+      <span>{isExpanded ? words.join(" ") : `${preview.join(" ")}...`}</span>
+      <button style={buttonStyle} onClick={handleIsExpanded}>
+        {isExpanded ? collapseButtonText : expandButtonText}
+      </button>
+    </div>
+  );
+}
+
+CODING CHALLENGE #1 (Section 12)
+
+App.js
+
+// `https://api.frankfurter.app/latest?amount=100&from=EUR&to=USD`
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+  const [amount, setAmount] = useState("");
+  const [fromCurrency, setFromCurrency] = useState("EUR");
+  const [toCurrency, setToCurrency] = useState("USD");
+  const [convertedValue, setConvertedValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(
+    function () {
+      const controller = new AbortController();
+
+      async function convertCurrency() {
+        setIsLoading(true);
+        try {
+          res = await fetch(
+            `https://api.frankfurter.app/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`
+            // { signal: controller.signal }
+          );
+
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching converter API");
+          data = await res.json();
+          setConvertedValue(data.rates[toCurrency]);
+          setIsLoading(false);
+          console.log(data);
+        } catch (err) {
+          if (err.name === "AbortError") return;
+          console.log(err.message);
+        }
+      }
+
+      if (fromCurrency === toCurrency) return setConvertedValue(amount);
+      convertCurrency();
+      return function () {
+        controller.abort();
+      };
+    },
+    [amount, fromCurrency, toCurrency]
+  );
+  return (
+    <div>
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => setAmount(+e.target.value)}
+        // disabled={isLoading}
+      />
+      <select
+        value={fromCurrency}
+        onChange={(e) => setFromCurrency(e.target.value)}
+        // disabled={isLoading}
+      >
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="CAD">CAD</option>
+        <option value="INR">INR</option>
+      </select>
+      <select
+        value={toCurrency}
+        onChange={(e) => setToCurrency(e.target.value)}
+        // disabled={isLoading}
+      >
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="CAD">CAD</option>
+        <option value="INR">INR</option>
+      </select>
+      <p>
+        {convertedValue} {convertedValue && toCurrency}
+        {/* {isLoading
+          ? "Loading data from API..."
+          : convertedValue
+          ? `${convertedValue} ${toCurrency}`
+          : ""} */}
+      </p>
+    </div>
+  );
+}
+
+CODING CHALLENGE #1 (Section 13)
+
+App.js
+
+import { useState } from "react";
+
+function useGeolocation() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [position, setPosition] = useState({});
+  const [error, setError] = useState(null);
+
+  function getPosition() {
+    if (!navigator.geolocation)
+      return setError("Your browser does not support geolocation");
+
+    setIsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setPosition({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+        setIsLoading(false);
+      },
+      (error) => {
+        setError(error.message);
+        setIsLoading(false);
+      }
+    );
+  }
+  return { position, isLoading, error, getPosition };
+}
+
+export default function App() {
+  const [countClicks, setCountClicks] = useState(0);
+  const { position, isLoading, error, getPosition } = useGeolocation();
+  const { lat, lng } = position;
+
+  function handleClick() {
+    setCountClicks((count) => count + 1);
+    getPosition();
+  }
+
+  return (
+    <div>
+      <button onClick={handleClick} disabled={isLoading}>
+        Get my position
+      </button>
+
+      {isLoading && <p>Loading position...</p>}
+      {error && <p>{error}</p>}
+      {!isLoading && !error && lat && lng && (
+        <p>
+          Your GPS position:{" "}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={`https://www.openstreetmap.org/#map=16/${lat}/${lng}`}
+          >
+            {lat}, {lng}
+          </a>
+        </p>
+      )}
+
+      <p>You requested position {countClicks} times</p>
+    </div>
+  );
+}
