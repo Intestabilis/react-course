@@ -1,0 +1,36 @@
+.nav {
+  background-color: orangered;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* we are using global function to style actual active navLink, since without using it .active selector will get a random identifier to remove collisions with other modules */
+.nav :global(.active) {
+  background-color: green;
+}
+
+/* won't work in modules properly, will select all ul elements in application */
+
+/* should never use this  */
+/* ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+} */
+
+/* These modules are creating random className when attached, so it won't confling with any other written class */
+/* i.e. this .nav class will be smth like nav_abcddc_1 while .nav class in other module will be different like nav_mcsdcj_1 */
+/* Helps to avoid naming clashes */
+
+/* we can define global css in css modules too */
+/* for this we are wrapping selector in :global() function */
+
+:global(.test) {
+  background-color: red;
+}
+
+/* we use exported like this css as any other css (string in className, not imported JS object)*/
