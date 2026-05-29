@@ -17,6 +17,9 @@ function Sidebar() {
     <StyledSidebar>
       <Logo />
       <MainNav></MainNav>
+
+      {/* For testing during development */}
+      {/* <Uploader /> */}
     </StyledSidebar>
   );
 }

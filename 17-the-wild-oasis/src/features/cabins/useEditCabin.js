@@ -12,7 +12,7 @@ export function useEditCabin() {
       queryClient.invalidateQueries({ queryKey: ["cabins"] });
     },
     onError: (err) => {
-      toast.error(`Cabin was not created: ${err.message}`);
+      toast.error(`Cabin was not edited: ${err.message}`);
     },
   });
 
