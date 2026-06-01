@@ -1,11 +1,18 @@
-import CabinCard from "@/app/_components/CabinCard";
+import { Suspense } from "react";
+import CabinList from "../_components/CabinList";
+import Spinner from "../_components/Spinner";
+
+// making page dynamic again + revalidating the cache completely
+// also revalidate can't be computed and needs to be a value
+// export const revalidate = 0;
+// page basically regenerating for each request
+
+// doint revalidation 1 per hour since it's not likely that cabin prices will be updated often
+export const revalidate = 3600;
 
 export const metadata = { title: "Cabins" };
 
 export default function Page() {
-  // CHANGE
-  const cabins = [];
-
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -19,14 +26,10 @@ export default function Page() {
         home away from home. The perfect spot for a peaceful, calm vacation.
         Welcome to paradise.
       </p>
-
-      {cabins.length > 0 && (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 xl:gap-14">
-          {cabins.map((cabin) => (
-            <CabinCard cabin={cabin} key={cabin.id} />
-          ))}
-        </div>
-      )}
+      {/* usage of Suspense */}
+      <Suspense fallback={<Spinner />}>
+        <CabinList />
+      </Suspense>
     </div>
   );
 }
