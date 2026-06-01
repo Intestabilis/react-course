@@ -8,7 +8,7 @@ import { unstable_noStore as noStore } from "next/cache";
 // opting out one of the component of the page will opt out the entire route (because of dynamic generation and ofc page will be dynamic generated too)
 // make sense with PPR since this component will be in Suspense and page around will be generated as static (shell) and component'll be generated dynamically
 // (at least based on course info since it can be different(?) in next.js 16 and course is based on next.js 14)
-async function CabinList() {
+async function CabinList({ filter }) {
   // noStore();
 
   // can't revalidate with fetch api since we're using supabase api and not fetch() directly
@@ -16,9 +16,19 @@ async function CabinList() {
 
   if (!cabins.length) return null;
 
+  const displayedCabins =
+    {
+      all: cabins,
+      small: cabins.filter((cabin) => cabin.maxCapacity <= 3),
+      medium: cabins.filter(
+        (cabin) => cabin.maxCapacity >= 4 && cabin.maxCapacity <= 7,
+      ),
+      large: cabins.filter((cabin) => cabin.maxCapacity >= 8),
+    }[filter] || cabins;
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 xl:gap-14">
-      {cabins.map((cabin) => (
+      {displayedCabins.map((cabin) => (
         <CabinCard cabin={cabin} key={cabin.id} />
       ))}
     </div>
